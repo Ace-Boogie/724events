@@ -65,7 +65,7 @@ describe("When slider is created", () => {
             .map((node) => node.textContent);
 
         expect(renderedTitles).toEqual([
-            "Faux titre pour test",
+            "World Gaming Day",
             "World economic forum",
             "World Farming Day",
         ]);
