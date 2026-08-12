@@ -19,6 +19,14 @@ module.exports = {
   plugins: [
     'react',
   ],
+  overrides: [
+    {
+      files: ["cypress.config.js"],
+      rules: {
+        "import/no-extraneous-dependencies": "off",
+      },
+    },
+  ],
   rules: {
     'react/react-in-jsx-scope': 'off',
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],

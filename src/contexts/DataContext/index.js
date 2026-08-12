@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
 } from "react";
 
 const DataContext = createContext({});
@@ -19,6 +20,7 @@ export const api = {
 export const DataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+
   const getData = useCallback(async () => {
     try {
       setData(await api.loadData());
@@ -29,16 +31,22 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     if (data) return;
     getData();
-  });
+  }, [data, getData]);
+
+  const last = useMemo(() => {
+    if (!data?.events?.length) return null;
+    return [...data.events].sort(
+        (evtA, evtB) => new Date(evtA.date) - new Date(evtB.date)
+    )[data.events.length - 1];
+  }, [data]);
+
+  const value = useMemo(
+      () => ({ data, error, last }),
+      [data, error, last]
+  );
   
   return (
-    <DataContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        data,
-        error,
-      }}
-    >
+    <DataContext.Provider value={value}>
       {children}
     </DataContext.Provider>
   );
